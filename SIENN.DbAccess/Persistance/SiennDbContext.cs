@@ -1,6 +1,7 @@
 ﻿namespace SIENN.DbAccess.Persistance
 {
     using Microsoft.EntityFrameworkCore;
+    using WebApi.Model;
 
     public class SiennDbContext : DbContext
     {
@@ -8,5 +9,7 @@
             : base(options)
         {
         }
+
+        public DbSet<Product> Products { get; set; }
     }
 }
