@@ -17,13 +17,13 @@
         public float Price { get; set; }
         public bool IsAvailable { get; set; }
         public DateTime DeliveryDate { get; set; }
-        public ICollection<Category> Categories { get; set; }
+        public ICollection<CategoryToProduct> CategoryToProducts { get; set; }
         public Model.Type Type { get; set; }
         public Unit Unit { get; set; }
 
         public Product()
         {
-            Categories = new Collection<Category>();
+            CategoryToProducts = new Collection<CategoryToProduct>();
         }
     }
 }

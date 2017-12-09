@@ -11,5 +11,11 @@
         }
 
         public DbSet<Product> Products { get; set; }
+        public DbSet<Category> Categories { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<CategoryToProduct>().HasKey(t => new {t.CategoryId, t.ProductId});
+        }
     }
 }
