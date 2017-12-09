@@ -1,7 +1,7 @@
 ﻿namespace SIENN.DbAccess.Persistance
 {
     using Microsoft.EntityFrameworkCore;
-    using WebApi.Model;
+    using Services.Model;
 
     public class SiennDbContext : DbContext
     {
