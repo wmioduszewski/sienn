@@ -6,6 +6,9 @@ using Swashbuckle.AspNetCore.Swagger;
 
 namespace SIENN.WebApi
 {
+    using DbAccess.Persistance;
+    using Microsoft.EntityFrameworkCore;
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -17,6 +20,8 @@ namespace SIENN.WebApi
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<SiennDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info
