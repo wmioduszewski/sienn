@@ -20,7 +20,8 @@ namespace SIENN.WebApi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<SiennDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
+            services.AddDbContext<SiennDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default"), 
+                b => b.MigrationsAssembly("SIENN.WebApi")));
 
             services.AddSwaggerGen(c =>
             {
