@@ -116,12 +116,12 @@ namespace SIENN.WebApi.Migrations
             modelBuilder.Entity("SIENN.Services.Model.CategoryToProduct", b =>
                 {
                     b.HasOne("SIENN.Services.Model.Category", "Category")
-                        .WithMany("CategoryToProducts")
+                        .WithMany("Products")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("SIENN.Services.Model.Product", "Product")
-                        .WithMany("CategoryToProducts")
+                        .WithMany("Products")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

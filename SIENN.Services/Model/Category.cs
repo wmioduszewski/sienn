@@ -14,11 +14,11 @@ namespace SIENN.Services.Model
         public string Code { get; set; }
         [StringLength(255)]
         public string Description { get; set; }
-        public ICollection<CategoryToProduct> CategoryToProducts { get; set; }
+        public ICollection<CategoryToProduct> Products { get; set; }
 
         public Category()
         {
-            CategoryToProducts = new Collection<CategoryToProduct>();
+            Products = new Collection<CategoryToProduct>();
         }
     }
 }

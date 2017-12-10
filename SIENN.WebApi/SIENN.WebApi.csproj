@@ -13,6 +13,8 @@
     <Compile Remove="Migrations\20171210215408_ExplicitUnitAndType.Designer.cs" />
     <Compile Remove="Migrations\20171210215545_ExplicitUnitAndType.cs" />
     <Compile Remove="Migrations\20171210215545_ExplicitUnitAndType.Designer.cs" />
+    <Compile Remove="Migrations\20171210231522_RefactoringCategoryToProduct.cs" />
+    <Compile Remove="Migrations\20171210231522_RefactoringCategoryToProduct.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -17,7 +17,7 @@
         public float Price { get; set; }
         public bool IsAvailable { get; set; }
         public DateTime DeliveryDate { get; set; }
-        public ICollection<CategoryToProduct> CategoryToProducts { get; set; }
+        public ICollection<CategoryToProduct> Categories { get; set; }
         public Model.Type Type { get; set; }
         public int TypeId { get; set; }
         public Unit Unit { get; set; }
@@ -25,7 +25,7 @@
 
         public Product()
         {
-            CategoryToProducts = new Collection<CategoryToProduct>();
+            Categories = new Collection<CategoryToProduct>();
         }
     }
 }
