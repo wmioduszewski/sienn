@@ -9,6 +9,10 @@
     <Compile Remove="Migrations\20171209193729_InitialModel.Designer.cs" />
     <Compile Remove="Migrations\20171209233706_SeedTheDatabase.cs" />
     <Compile Remove="Migrations\20171209233706_SeedTheDatabase.Designer.cs" />
+    <Compile Remove="Migrations\20171210215408_ExplicitUnitAndType.cs" />
+    <Compile Remove="Migrations\20171210215408_ExplicitUnitAndType.Designer.cs" />
+    <Compile Remove="Migrations\20171210215545_ExplicitUnitAndType.cs" />
+    <Compile Remove="Migrations\20171210215545_ExplicitUnitAndType.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,6 +21,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="1.1.0" />
   </ItemGroup>
 

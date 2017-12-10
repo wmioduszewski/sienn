@@ -12,6 +12,8 @@
 
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Unit> Unit { get; set; }
+        public DbSet<Type> Type { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
