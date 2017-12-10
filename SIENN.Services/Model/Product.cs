@@ -19,7 +19,9 @@
         public DateTime DeliveryDate { get; set; }
         public ICollection<CategoryToProduct> CategoryToProducts { get; set; }
         public Model.Type Type { get; set; }
+        public int TypeId { get; set; }
         public Unit Unit { get; set; }
+        public int UnitId { get; set; }
 
         public Product()
         {

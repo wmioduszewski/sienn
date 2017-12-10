@@ -11,9 +11,10 @@ using System;
 namespace SIENN.WebApi.Migrations
 {
     [DbContext(typeof(SiennDbContext))]
-    partial class SiennDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171210001557_FixedOneToManyDirection")]
+    partial class FixedOneToManyDirection
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

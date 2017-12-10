@@ -7,6 +7,8 @@
   <ItemGroup>
     <Compile Remove="Migrations\20171209193729_InitialModel.cs" />
     <Compile Remove="Migrations\20171209193729_InitialModel.Designer.cs" />
+    <Compile Remove="Migrations\20171209233706_SeedTheDatabase.cs" />
+    <Compile Remove="Migrations\20171209233706_SeedTheDatabase.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
