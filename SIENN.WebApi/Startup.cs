@@ -6,6 +6,7 @@ using Swashbuckle.AspNetCore.Swagger;
 
 namespace SIENN.WebApi
 {
+    using AutoMapper;
     using DbAccess.Persistance;
     using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +21,8 @@ namespace SIENN.WebApi
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper();
+
             services.AddDbContext<SiennDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default"), 
                 b => b.MigrationsAssembly("SIENN.WebApi")));
 
