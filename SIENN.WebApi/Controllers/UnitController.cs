@@ -44,5 +44,20 @@
 
             return Ok(result);
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteUnit(int id)
+        {
+            var unit = context.Unit.Find(id);
+            if (unit == null)
+            {
+                return NotFound();
+            }
+
+            context.Remove(unit);
+            context.SaveChanges();
+
+            return Ok(id);
+        }
     }
 }

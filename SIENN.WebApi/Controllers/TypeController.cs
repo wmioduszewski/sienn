@@ -46,5 +46,20 @@
 
             return Ok(result);
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteType(int id)
+        {
+            var type = context.Type.Find(id);
+            if (type == null)
+            {
+                return NotFound();
+            }
+
+            context.Remove(type);
+            context.SaveChanges();
+
+            return Ok(id);
+        }
     }
 }

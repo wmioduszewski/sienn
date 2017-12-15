@@ -43,5 +43,20 @@
 
             return Ok(result);
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteCategory(int id)
+        {
+            var category = context.Categories.Find(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            context.Remove(category);
+            context.SaveChanges();
+
+            return Ok(id);
+        }
     }
 }
