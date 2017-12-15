@@ -21,7 +21,7 @@
         }
 
         [HttpGet]
-        public IEnumerable<CategoryResource> GetTypes()
+        public IEnumerable<CategoryResource> GetCategories()
         {
             var categories = context.Categories.ToList();
             return mapper.Map<List<Category>, List<CategoryResource>>(categories);
@@ -30,6 +30,10 @@
         [HttpPost]
         public IActionResult CreateCategory([FromBody] CategoryResource categoryResource)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var category = mapper.Map<CategoryResource, Category>(categoryResource);
 
             context.Categories.Add(category);

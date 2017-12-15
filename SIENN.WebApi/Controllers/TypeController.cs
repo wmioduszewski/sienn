@@ -32,6 +32,11 @@
         [HttpPost]
         public IActionResult CreateType([FromBody] TypeResource typeResource)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var type = mapper.Map<TypeResource, Type>(typeResource);
 
             context.Type.Add(type);

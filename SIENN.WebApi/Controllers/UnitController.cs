@@ -30,6 +30,11 @@
         [HttpPost]
         public IActionResult CreateUnit([FromBody] UnitResource unitResource)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var unit = mapper.Map<UnitResource, Unit>(unitResource);
 
             context.Unit.Add(unit);
