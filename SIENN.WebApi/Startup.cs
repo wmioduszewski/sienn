@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Swashbuckle.AspNetCore.Swagger;
-
-namespace SIENN.WebApi
+﻿namespace SIENN.WebApi
 {
+    using System.Reflection;
     using AutoMapper;
     using DbAccess.Persistance;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Services.Mapping;
+    using Swashbuckle.AspNetCore.Swagger;
 
     public class Startup
     {
@@ -21,9 +22,10 @@ namespace SIENN.WebApi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAutoMapper();
+            services.AddAutoMapper(Assembly.GetAssembly(typeof(MappingProfile)));
 
-            services.AddDbContext<SiennDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default"), 
+            services.AddDbContext<SiennDbContext>(options => options.UseSqlServer(
+                Configuration.GetConnectionString("Default"),
                 b => b.MigrationsAssembly("SIENN.WebApi")));
 
             services.AddSwaggerGen(c =>
@@ -46,10 +48,7 @@ namespace SIENN.WebApi
             }
 
             app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "SIENN Recruitment API v1");
-            });
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "SIENN Recruitment API v1"); });
 
             app.UseMvc();
         }

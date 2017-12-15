@@ -18,7 +18,8 @@
             CreateMap<TypeResource, Type>();
             CreateMap<UnitResource, Unit>();
 
-
+            CreateMap<CategoryResource, Category>()
+                .ForMember(x=>x.Products, opt => opt.Ignore());
         }
     }
 }

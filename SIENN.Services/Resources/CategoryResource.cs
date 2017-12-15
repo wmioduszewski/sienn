@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SIENN.Services.Resources
+﻿namespace SIENN.Services.Resources
 {
     public class CategoryResource
     {
