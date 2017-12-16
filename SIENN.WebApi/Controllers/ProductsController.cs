@@ -28,6 +28,18 @@
             return mapper.Map<List<Product>, List<ProductResource>>(products);
         }
 
+        [HttpGet("{id}")]
+        public IActionResult GetProduct(int id)
+        {
+            var product = context.Products.Include(p=>p.Categories).SingleOrDefault(p=>p.Id==id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            var productResource = mapper.Map<Product, ProductResource>(product);
+            return Ok(productResource);
+        }
+
         [HttpPost]
         public IActionResult CreateProduct([FromBody] ProductResource productResource)
         {

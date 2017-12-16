@@ -27,6 +27,18 @@
             return mapper.Map<List<Category>, List<CategoryResource>>(categories);
         }
 
+        [HttpGet("{id}")]
+        public IActionResult GetCategory(int id)
+        {
+            var category = context.Categories.Find(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+            var categoryResource = mapper.Map<Category, CategoryResource>(category);
+            return Ok(categoryResource);
+        }
+
         [HttpPost]
         public IActionResult CreateCategory([FromBody] CategoryResource categoryResource)
         {

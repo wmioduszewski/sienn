@@ -27,6 +27,18 @@
             return mapper.Map<List<Unit>, List<UnitResource>>(units);
         }
 
+        [HttpGet("{id}")]
+        public IActionResult GetUnit(int id)
+        {
+            var unit = context.Unit.Find(id);
+            if (unit == null)
+            {
+                return NotFound();
+            }
+            var unitResource = mapper.Map<Unit, UnitResource>(unit);
+            return Ok(unitResource);
+        }
+
         [HttpPost]
         public IActionResult CreateUnit([FromBody] UnitResource unitResource)
         {

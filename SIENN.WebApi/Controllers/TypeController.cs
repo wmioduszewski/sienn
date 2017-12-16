@@ -29,6 +29,18 @@
             return mapper.Map<List<Type>, List<TypeResource>>(types);
         }
 
+        [HttpGet("{id}")]
+        public IActionResult GetType(int id)
+        {
+            var type = context.Type.Find(id);
+            if (type == null)
+            {
+                return NotFound();
+            }
+            var typeResource = mapper.Map<Type, TypeResource>(type);
+            return Ok(typeResource);
+        }
+
         [HttpPost]
         public IActionResult CreateType([FromBody] TypeResource typeResource)
         {
