@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-
-namespace SIENN.WebApi.Controllers
+﻿namespace SIENN.WebApi.Controllers
 {
-    using System.Data.SqlClient;
+    using System.Collections.Generic;
+    using System.Linq;
     using AutoMapper;
     using DbAccess.Persistance;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Services.Model;
     using Services.Resources;
@@ -28,13 +24,33 @@ namespace SIENN.WebApi.Controllers
         [HttpGet]
         public IEnumerable<ProductResource> GetProducts()
         {
-            var products = context.Products.Include(p=>p.Categories).ToList();
+            var products = context.Products.Include(p => p.Categories).ToList();
             return mapper.Map<List<Product>, List<ProductResource>>(products);
         }
 
         [HttpPost]
         public IActionResult CreateProduct([FromBody] ProductResource productResource)
         {
+            var type = context.Type.Find(productResource.TypeId);
+            if (type == null)
+            {
+                ModelState.AddModelError("TypeId", "You're trying to assign product to not existing type");
+            }
+
+            var unit = context.Unit.Find(productResource.UnitId);
+            if (unit == null)
+            {
+                ModelState.AddModelError("UnitId", "You're trying to assign product to not existing unit");
+            }
+
+            foreach (var categoryId in productResource.Categories)
+            {
+                if (context.Categories.Find(categoryId) == null)
+                {
+                    ModelState.AddModelError("CategoryId", "You're trying to assign product to not existing category");
+                }
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -42,19 +58,8 @@ namespace SIENN.WebApi.Controllers
 
             var product = mapper.Map<ProductResource, Product>(productResource);
 
-            try
-            {
-                context.Products.Add(product);
-                context.SaveChanges();
-            }
-            catch (DbUpdateException ex)
-            {
-                return NotFound("Unit, type or category couldn't be found\n" + ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
+            context.Products.Add(product);
+            context.SaveChanges();
 
             var result = mapper.Map<Product, ProductResource>(product);
 

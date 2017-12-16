@@ -19,7 +19,9 @@ namespace SIENN.Services.Resources
         public bool IsAvailable { get; set; }
         public DateTime DeliveryDate { get; set; }
         public ICollection<int> Categories { get; set; }
+        [Required]
         public int TypeId { get; set; }
+        [Required]
         public int UnitId { get; set; }
 
         public ProductResource()
