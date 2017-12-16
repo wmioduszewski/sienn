@@ -35,16 +35,14 @@
                 {
                     //remove unselected categories
                     var removedCategories = p.Categories.Where(c => !pr.Categories.Contains(c.CategoryId)).ToList();
-
-                    var addedCategories = pr.Categories.Where(id => p.Categories.All(c => c.CategoryId != id))
-                        //.Select(id => p.Categories.Single(x=>x.CategoryId==id && x.ProductId==pr.Id)).ToList();
-                        .Select(id => new CategoryToProduct() { CategoryId = id, ProductId = pr.Id }).ToList();
-
                     foreach (var categoryToProduct in removedCategories)
                     {
                         p.Categories.Remove(categoryToProduct);
                     }
-                    
+
+                    //add added categories
+                    var addedCategories = pr.Categories.Where(id => p.Categories.All(c => c.CategoryId != id))
+                        .Select(id => new CategoryToProduct() { CategoryId = id, ProductId = pr.Id }).ToList();
                     foreach (var categoryToProduct in addedCategories)
                     {
                         p.Categories.Add(categoryToProduct);

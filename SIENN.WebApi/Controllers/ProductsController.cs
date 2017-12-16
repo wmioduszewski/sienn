@@ -46,20 +46,20 @@
             var type = context.Type.Find(productResource.TypeId);
             if (type == null)
             {
-                ModelState.AddModelError("TypeId", "You're trying to assign product to not existing type");
+                ModelState.AddModelError("TypeId", $"You're trying to assign product to not existing type [{productResource.TypeId}]");
             }
 
             var unit = context.Unit.Find(productResource.UnitId);
             if (unit == null)
             {
-                ModelState.AddModelError("UnitId", "You're trying to assign product to not existing unit");
+                ModelState.AddModelError("UnitId", $"You're trying to assign product to not existing unit [{productResource.UnitId}]");
             }
 
             foreach (var categoryId in productResource.Categories)
             {
                 if (context.Categories.Find(categoryId) == null)
                 {
-                    ModelState.AddModelError("CategoryId", "You're trying to assign product to not existing category");
+                    ModelState.AddModelError("CategoryId", $"You're trying to assign product to not existing category [{categoryId}]");
                 }
             }
 
@@ -106,7 +106,7 @@
                 return BadRequest(ModelState);
             }
 
-            var product = context.Products.Find(id);
+            var product = context.Products.Include(p=>p.Categories).Single(p=>p.Id==id);
             mapper.Map(productResource, product);
             context.Products.Attach(product);
             context.SaveChanges();
