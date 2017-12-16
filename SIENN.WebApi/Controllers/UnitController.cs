@@ -45,6 +45,23 @@
             return Ok(result);
         }
 
+        [HttpPut("{id}")]
+        public IActionResult UpdateUnit(int id, [FromBody] UnitResource unitResource)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var unit = context.Unit.Find(id);
+            mapper.Map(unitResource, unit);
+
+            context.SaveChanges();
+            var result = mapper.Map<Unit, UnitResource>(unit);
+
+            return Ok(result);
+        }
+
         [HttpDelete("{id}")]
         public IActionResult DeleteUnit(int id)
         {

@@ -47,6 +47,23 @@
             return Ok(result);
         }
 
+        [HttpPut("{id}")]
+        public IActionResult UpdateType(int id, [FromBody] TypeResource typeResource)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var type = context.Type.Find(id);
+            mapper.Map(typeResource, type);
+
+            context.SaveChanges();
+            var result = mapper.Map<Type, TypeResource>(type);
+
+            return Ok(result);
+        }
+
         [HttpDelete("{id}")]
         public IActionResult DeleteType(int id)
         {

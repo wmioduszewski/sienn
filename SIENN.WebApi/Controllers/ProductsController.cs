@@ -66,6 +66,43 @@
             return Ok(result);
         }
 
+        [HttpPut("{id}")]
+        public IActionResult UpdateProduct(int id, [FromBody] ProductResource productResource)
+        {
+            var type = context.Type.Find(productResource.TypeId);
+            if (type == null)
+            {
+                ModelState.AddModelError("TypeId", "You're trying to assign product to not existing type");
+            }
+
+            var unit = context.Unit.Find(productResource.UnitId);
+            if (unit == null)
+            {
+                ModelState.AddModelError("UnitId", "You're trying to assign product to not existing unit");
+            }
+
+            foreach (var categoryId in productResource.Categories)
+            {
+                if (context.Categories.Find(categoryId) == null)
+                {
+                    ModelState.AddModelError("CategoryId", "You're trying to assign product to not existing category");
+                }
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var product = context.Products.Find(id);
+            mapper.Map(productResource, product);
+            context.Products.Attach(product);
+            context.SaveChanges();
+            var result = mapper.Map<Product, ProductResource>(product);
+
+            return Ok(result);
+        }
+
         [HttpDelete("{id}")]
         public IActionResult DeleteProduct(int id)
         {

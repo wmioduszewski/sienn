@@ -44,6 +44,23 @@
             return Ok(result);
         }
 
+        [HttpPut]
+        public IActionResult UpdateCategory(int id, [FromBody] CategoryResource categoryResource)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var category = context.Categories.Find(id);
+            mapper.Map<CategoryResource, Category>(categoryResource);
+
+            context.SaveChanges();
+            var result = mapper.Map<Category, CategoryResource>(category);
+
+            return Ok(result);
+        }
+
         [HttpDelete("{id}")]
         public IActionResult DeleteCategory(int id)
         {
