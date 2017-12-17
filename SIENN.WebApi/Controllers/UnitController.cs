@@ -3,7 +3,8 @@
     using System.Collections.Generic;
     using System.Linq;
     using AutoMapper;
-    using DbAccess.Persistance;
+    using DbAccess;
+    using DbAccess.Repositories;
     using Microsoft.AspNetCore.Mvc;
     using Services.Model;
     using Services.Resources;
@@ -11,26 +12,28 @@
     [Route("api/units")]
     public class UnitController : Controller
     {
-        private readonly SiennDbContext context;
+        private readonly IGenericRepository<Unit> unitRepository;
+        private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
 
-        public UnitController(SiennDbContext context, IMapper mapper)
+        public UnitController(IGenericRepository<Unit> unitRepository, IUnitOfWork uow, IMapper mapper)
         {
-            this.context = context;
+            this.unitRepository = unitRepository;
+            this.uow = uow;
             this.mapper = mapper;
         }
 
         [HttpGet]
         public IEnumerable<UnitResource> GetTypes()
         {
-            var units = context.Unit.ToList();
+            var units = unitRepository.GetAll().ToList();
             return mapper.Map<List<Unit>, List<UnitResource>>(units);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetUnit(int id)
         {
-            var unit = context.Unit.Find(id);
+            var unit = unitRepository.Get(id);
             if (unit == null)
             {
                 return NotFound();
@@ -49,8 +52,8 @@
 
             var unit = mapper.Map<UnitResource, Unit>(unitResource);
 
-            context.Unit.Add(unit);
-            context.SaveChanges();
+            unitRepository.Add(unit);
+            uow.Complete();
 
             var result = mapper.Map<Unit, UnitResource>(unit);
 
@@ -65,10 +68,10 @@
                 return BadRequest(ModelState);
             }
 
-            var unit = context.Unit.Find(id);
+            var unit = unitRepository.Get(id);
             mapper.Map(unitResource, unit);
 
-            context.SaveChanges();
+            uow.Complete();
             var result = mapper.Map<Unit, UnitResource>(unit);
 
             return Ok(result);
@@ -77,14 +80,14 @@
         [HttpDelete("{id}")]
         public IActionResult DeleteUnit(int id)
         {
-            var unit = context.Unit.Find(id);
+            var unit = unitRepository.Get(id);
             if (unit == null)
             {
                 return NotFound();
             }
 
-            context.Remove(unit);
-            context.SaveChanges();
+            unitRepository.Remove(unit);
+            uow.Complete();
 
             return Ok(id);
         }

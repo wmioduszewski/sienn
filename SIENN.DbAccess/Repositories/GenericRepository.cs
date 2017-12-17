@@ -6,55 +6,57 @@ using System.Linq.Expressions;
 
 namespace SIENN.DbAccess.Repositories
 {
-    public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
+    using Persistance;
+
+    public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
-        protected GenericRepository(DbContext context)
+        public GenericRepository(SiennDbContext context)
         {
-            _context = context;
-            _entities = context.Set<TEntity>();
+            Context = context;
+            Entities = context.Set<TEntity>();
         }
 
         public virtual TEntity Get(int id)
         {
-            return _entities.Find(id);
+            return Entities.Find(id);
         }
 
         public virtual IEnumerable<TEntity> GetAll()
         {
-            return _entities.ToList();
+            return Entities.ToList();
         }
 
         public virtual IEnumerable<TEntity> GetRange(int start, int count)
         {
-            return _entities.Skip(start).Take(count).ToList();
+            return Entities.Skip(start).Take(count).ToList();
         }
 
         public virtual IEnumerable<TEntity> GetRange(int start, int count, Expression<Func<TEntity, bool>> predicate)
         {
-            return _entities.Where(predicate).Skip(start).Take(count).ToList();
+            return Entities.Where(predicate).Skip(start).Take(count).ToList();
         }
 
         public virtual IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
         {
-            return _entities.Where(predicate);
+            return Entities.Where(predicate);
         }
 
         public virtual int Count()
         {
-            return _entities.Count();
+            return Entities.Count();
         }
 
         public virtual void Add(TEntity entity)
         {
-            _entities.Add(entity);
+            Entities.Add(entity);
         }
 
         public virtual void Remove(TEntity entity)
         {
-            _entities.Remove(entity);
+            Entities.Remove(entity);
         }
 
-        private DbSet<TEntity> _entities;
-        private DbContext _context;
+        protected DbSet<TEntity> Entities;
+        protected SiennDbContext Context;
     }
 }

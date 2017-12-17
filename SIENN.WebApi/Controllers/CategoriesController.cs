@@ -3,7 +3,9 @@
     using System.Collections.Generic;
     using System.Linq;
     using AutoMapper;
+    using DbAccess;
     using DbAccess.Persistance;
+    using DbAccess.Repositories;
     using Microsoft.AspNetCore.Mvc;
     using Services.Model;
     using Services.Resources;
@@ -11,26 +13,28 @@
     [Route("api/categories")]
     public class CategoriesController : Controller
     {
-        private readonly SiennDbContext context;
+        private readonly IGenericRepository<Category> categoryRepository;
+        private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
 
-        public CategoriesController(SiennDbContext context, IMapper mapper)
+        public CategoriesController(IGenericRepository<Category> categoryRepository, IUnitOfWork uow, IMapper mapper)
         {
-            this.context = context;
+            this.categoryRepository = categoryRepository;
+            this.uow = uow;
             this.mapper = mapper;
         }
 
         [HttpGet]
         public IEnumerable<CategoryResource> GetCategories()
         {
-            var categories = context.Categories.ToList();
+            var categories = categoryRepository.GetAll().ToList();
             return mapper.Map<List<Category>, List<CategoryResource>>(categories);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetCategory(int id)
         {
-            var category = context.Categories.Find(id);
+            var category = categoryRepository.Get(id);
             if (category == null)
             {
                 return NotFound();
@@ -48,8 +52,8 @@
             }
             var category = mapper.Map<CategoryResource, Category>(categoryResource);
 
-            context.Categories.Add(category);
-            context.SaveChanges();
+            categoryRepository.Add(category);
+            uow.Complete();
 
             var result = mapper.Map<Category, CategoryResource>(category);
 
@@ -64,10 +68,10 @@
                 return BadRequest(ModelState);
             }
 
-            var category = context.Categories.Find(id);
+            var category = categoryRepository.Get(id);
             mapper.Map<CategoryResource, Category>(categoryResource);
 
-            context.SaveChanges();
+            uow.Complete();
             var result = mapper.Map<Category, CategoryResource>(category);
 
             return Ok(result);
@@ -76,14 +80,14 @@
         [HttpDelete("{id}")]
         public IActionResult DeleteCategory(int id)
         {
-            var category = context.Categories.Find(id);
+            var category = categoryRepository.Get(id);
             if (category == null)
             {
                 return NotFound();
             }
 
-            context.Remove(category);
-            context.SaveChanges();
+            categoryRepository.Remove(category);
+            uow.Complete();
 
             return Ok(id);
         }

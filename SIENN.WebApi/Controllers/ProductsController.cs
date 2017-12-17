@@ -3,35 +3,52 @@
     using System.Collections.Generic;
     using System.Linq;
     using AutoMapper;
-    using DbAccess.Persistance;
+    using DbAccess;
+    using DbAccess.Repositories;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
     using Services.Model;
     using Services.Resources;
 
     [Route("api/products")]
     public class ProductsController : Controller
     {
-        private readonly SiennDbContext context;
+        private readonly IProductRepository productRepository;
+        private readonly IGenericRepository<Type> typeRepository;
+        private readonly IGenericRepository<Unit> unitRepository;
+        private readonly IGenericRepository<Category> categoryRepository;
+        private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
 
-        public ProductsController(SiennDbContext context, IMapper mapper)
+        public ProductsController(IProductRepository productRepository, IGenericRepository<Type> typeRepository, 
+            IGenericRepository<Unit> unitRepository, IGenericRepository<Category> categoryRepository,
+            IUnitOfWork unitOfWork, IMapper mapper)
         {
-            this.context = context;
+            this.productRepository = productRepository;
+            this.typeRepository = typeRepository;
+            this.unitRepository = unitRepository;
+            this.categoryRepository = categoryRepository;
+            this.unitOfWork = unitOfWork;
             this.mapper = mapper;
         }
 
         [HttpGet]
         public IEnumerable<ProductResource> GetProducts()
         {
-            var products = context.Products.Include(p => p.Categories).ToList();
+            var products = productRepository.GetAll().ToList();
+            return mapper.Map<List<Product>, List<ProductResource>>(products);
+        }
+
+        [HttpGet("available")]
+        public IEnumerable<ProductResource> GetAvailableProducts()
+        {
+            var products = productRepository.GetAvailableProducts().ToList();
             return mapper.Map<List<Product>, List<ProductResource>>(products);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetProduct(int id)
         {
-            var product = context.Products.Include(p=>p.Categories).SingleOrDefault(p=>p.Id==id);
+            var product = productRepository.Get(id);
             if (product == null)
             {
                 return NotFound();
@@ -43,13 +60,13 @@
         [HttpPost]
         public IActionResult CreateProduct([FromBody] ProductResource productResource)
         {
-            var type = context.Type.Find(productResource.TypeId);
+            var type = typeRepository.Get(productResource.TypeId);
             if (type == null)
             {
                 ModelState.AddModelError("TypeId", $"You're trying to assign product to not existing type [{productResource.TypeId}]");
             }
 
-            var unit = context.Unit.Find(productResource.UnitId);
+            var unit = unitRepository.Get(productResource.UnitId);
             if (unit == null)
             {
                 ModelState.AddModelError("UnitId", $"You're trying to assign product to not existing unit [{productResource.UnitId}]");
@@ -57,7 +74,7 @@
 
             foreach (var categoryId in productResource.Categories)
             {
-                if (context.Categories.Find(categoryId) == null)
+                if (categoryRepository.Get(categoryId) == null)
                 {
                     ModelState.AddModelError("CategoryId", $"You're trying to assign product to not existing category [{categoryId}]");
                 }
@@ -70,8 +87,8 @@
 
             var product = mapper.Map<ProductResource, Product>(productResource);
 
-            context.Products.Add(product);
-            context.SaveChanges();
+            productRepository.Add(product);
+            unitOfWork.Complete();
 
             var result = mapper.Map<Product, ProductResource>(product);
 
@@ -81,13 +98,13 @@
         [HttpPut("{id}")]
         public IActionResult UpdateProduct(int id, [FromBody] ProductResource productResource)
         {
-            var type = context.Type.Find(productResource.TypeId);
+            var type = typeRepository.Get(productResource.TypeId);
             if (type == null)
             {
                 ModelState.AddModelError("TypeId", "You're trying to assign product to not existing type");
             }
 
-            var unit = context.Unit.Find(productResource.UnitId);
+            var unit = unitRepository.Get(productResource.UnitId);
             if (unit == null)
             {
                 ModelState.AddModelError("UnitId", "You're trying to assign product to not existing unit");
@@ -95,7 +112,7 @@
 
             foreach (var categoryId in productResource.Categories)
             {
-                if (context.Categories.Find(categoryId) == null)
+                if (categoryRepository.Get(categoryId) == null)
                 {
                     ModelState.AddModelError("CategoryId", "You're trying to assign product to not existing category");
                 }
@@ -106,10 +123,9 @@
                 return BadRequest(ModelState);
             }
 
-            var product = context.Products.Include(p=>p.Categories).Single(p=>p.Id==id);
+            var product = productRepository.Get(id);
             mapper.Map(productResource, product);
-            context.Products.Attach(product);
-            context.SaveChanges();
+            unitOfWork.Complete();
             var result = mapper.Map<Product, ProductResource>(product);
 
             return Ok(result);
@@ -118,14 +134,14 @@
         [HttpDelete("{id}")]
         public IActionResult DeleteProduct(int id)
         {
-            var product = context.Products.Find(id);
+            var product = productRepository.Get(id, includeRelated:false);
             if (product == null)
             {
                 return NotFound();
             }
 
-            context.Remove(product);
-            context.SaveChanges();
+            productRepository.Remove(product);
+            unitOfWork.Complete();
 
             return Ok(id);
         }

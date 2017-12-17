@@ -2,13 +2,16 @@
 {
     using System.Reflection;
     using AutoMapper;
+    using DbAccess;
     using DbAccess.Persistance;
+    using DbAccess.Repositories;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Services.Mapping;
+    using Services.Model;
     using Swashbuckle.AspNetCore.Swagger;
 
     public class Startup
@@ -27,6 +30,13 @@
             services.AddDbContext<SiennDbContext>(options => options.UseSqlServer(
                 Configuration.GetConnectionString("Default"),
                 b => b.MigrationsAssembly("SIENN.WebApi")));
+
+            services.AddScoped<IProductRepository, ProductRepository>();
+
+            //https://ardalis.com/registering-open-generics-in-aspnet-core-dependency-injection
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddSwaggerGen(c =>
             {
