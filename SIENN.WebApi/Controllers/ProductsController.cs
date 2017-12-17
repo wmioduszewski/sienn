@@ -40,9 +40,9 @@
         }
 
         [HttpGet("available")]
-        public IEnumerable<ProductResource> GetAvailableProducts()
+        public IEnumerable<ProductResource> GetAvailableProducts(ProductQuery productQuery)
         {
-            var products = productRepository.GetAvailableProducts().ToList();
+            var products = productRepository.GetAvailableProducts(productQuery).ToList();
             return mapper.Map<List<Product>, List<ProductResource>>(products);
         }
 

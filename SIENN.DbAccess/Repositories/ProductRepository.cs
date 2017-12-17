@@ -5,6 +5,7 @@ using System.Text;
 namespace SIENN.DbAccess.Repositories
 {
     using System.Linq;
+    using Extensions;
     using Microsoft.EntityFrameworkCore;
     using Persistance;
     using Services.Model;
@@ -45,9 +46,9 @@ namespace SIENN.DbAccess.Repositories
             return products.AsEnumerable();
         }
 
-        public IEnumerable<Product> GetAvailableProducts()
+        public IEnumerable<Product> GetAvailableProducts(ProductQuery productQuery)
         {
-            return GetAll().Where(x => x.IsAvailable).AsEnumerable();
+            return Context.Products.Where(x => x.IsAvailable).Include(p => p.Categories).ApplyPaging(productQuery).AsEnumerable();
         }
     }
 }
