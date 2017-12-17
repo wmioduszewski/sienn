@@ -32,9 +32,10 @@
         }
 
         [HttpGet]
-        public IEnumerable<ProductResource> GetProducts()
+        public IEnumerable<ProductResource> GetProducts(FilterResource filterResource)
         {
-            var products = productRepository.GetAll().ToList();
+            Filter filter = mapper.Map<FilterResource, Filter>(filterResource);
+            var products = productRepository.GetAll(filter).ToList();
             return mapper.Map<List<Product>, List<ProductResource>>(products);
         }
 

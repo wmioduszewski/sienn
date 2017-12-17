@@ -8,6 +8,7 @@ namespace SIENN.DbAccess.Repositories
     public interface IProductRepository : IGenericRepository<Product>
     {
         IEnumerable<Product> GetAvailableProducts();
+        IEnumerable<Product> GetAll(Filter filter);
         Product Get(int id, bool includeRelated = true);
     }
 }

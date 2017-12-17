@@ -20,6 +20,7 @@
                 .ForMember(pr => pr.Categories, opt => opt.MapFrom(p => p.Categories.Select(pc => pc.CategoryId)));
 
             //API to domain
+            CreateMap<FilterResource, Filter>();
             CreateMap<TypeResource, Type>()
                 .ForMember(t=>t.Id, opt=>opt.Ignore());
             CreateMap<UnitResource, Unit>()
