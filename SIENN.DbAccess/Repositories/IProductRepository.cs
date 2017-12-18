@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SIENN.DbAccess.Repositories
+﻿namespace SIENN.DbAccess.Repositories
 {
+    using System.Collections.Generic;
     using Services.Model;
+
     public interface IProductRepository : IGenericRepository<Product>
     {
         IEnumerable<Product> GetAvailableProducts(ProductQuery productQuery);
@@ -16,8 +14,10 @@ namespace SIENN.DbAccess.Repositories
     {
         //Only Product object
         Basic,
+
         //Product with categories
         Categories,
+
         //Each nested property
         Full
     }

@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel.DataAnnotations;
-    using Type = Model.Type;
 
     public class Product
     {
@@ -18,7 +17,7 @@
         public bool IsAvailable { get; set; }
         public DateTime DeliveryDate { get; set; }
         public ICollection<CategoryToProduct> Categories { get; set; }
-        public Model.Type Type { get; set; }
+        public Type Type { get; set; }
         public int TypeId { get; set; }
         public Unit Unit { get; set; }
         public int UnitId { get; set; }

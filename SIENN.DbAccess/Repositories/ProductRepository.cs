@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SIENN.DbAccess.Repositories
+﻿namespace SIENN.DbAccess.Repositories
 {
+    using System.Collections.Generic;
     using System.Linq;
     using Extensions;
     using Microsoft.EntityFrameworkCore;
     using Persistance;
     using Services.Model;
+
     public class ProductRepository : GenericRepository<Product>, IProductRepository
     {
         public ProductRepository(SiennDbContext context) : base(context)
@@ -25,14 +23,16 @@ namespace SIENN.DbAccess.Repositories
             //avoid eager loading of related objects when not needed
             switch (loadLevel)
             {
-                case LoadLevel.Categories: return Context.Products
-                    .Include(p => p.Categories)
-                    .SingleOrDefault(p => p.Id == id);
-                case LoadLevel.Full: return Context.Products
-                    .Include(p => p.Categories)
-                    .Include(p => p.Type)
-                    .Include(p => p.Unit)
-                    .SingleOrDefault(p => p.Id == id);
+                case LoadLevel.Categories:
+                    return Context.Products
+                        .Include(p => p.Categories)
+                        .SingleOrDefault(p => p.Id == id);
+                case LoadLevel.Full:
+                    return Context.Products
+                        .Include(p => p.Categories)
+                        .Include(p => p.Type)
+                        .Include(p => p.Unit)
+                        .SingleOrDefault(p => p.Id == id);
                 //Basic
                 default: return Context.Products.Find(id);
             }
@@ -50,14 +50,15 @@ namespace SIENN.DbAccess.Repositories
                 products = products.Where(x => x.Categories.Any(y => y.CategoryId == filter.CategoryId.Value));
             if (filter.TypeId.HasValue)
                 products = products.Where(x => x.TypeId == filter.TypeId.Value);
-            if(filter.UnitId.HasValue)
+            if (filter.UnitId.HasValue)
                 products = products.Where(x => x.UnitId == filter.UnitId.Value);
             return products.AsEnumerable();
         }
 
         public IEnumerable<Product> GetAvailableProducts(ProductQuery productQuery)
         {
-            return Context.Products.Where(x => x.IsAvailable).Include(p => p.Categories).ApplyPaging(productQuery).AsEnumerable();
+            return Context.Products.Where(x => x.IsAvailable).Include(p => p.Categories).ApplyPaging(productQuery)
+                .AsEnumerable();
         }
     }
 }

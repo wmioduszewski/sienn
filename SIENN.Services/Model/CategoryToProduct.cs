@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SIENN.Services.Model
+﻿namespace SIENN.Services.Model
 {
     public class CategoryToProduct
     {
