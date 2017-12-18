@@ -19,6 +19,15 @@
             CreateMap<Product, ProductResource>()
                 .ForMember(pr => pr.Categories, opt => opt.MapFrom(p => p.Categories.Select(pc => pc.CategoryId)));
 
+            CreateMap<Product, SiennProductResource>()
+                .ForMember(pr => pr.ProductDescription, opt => opt.MapFrom(p => $"({p.Code}) {p.Description}"))
+                .ForMember(pr => pr.Price, opt => opt.MapFrom(p => $"{p.Price:n2} zł"))
+                .ForMember(pr => pr.IsAvailable, opt => opt.MapFrom(p => p.IsAvailable ? "Dostępny" : "Niedostępny"))
+                .ForMember(pr => pr.DeliveryDate, opt => opt.MapFrom(p => p.DeliveryDate.ToString("dd.MM.yyyy")))
+                .ForMember(pr => pr.CategoriesCount, opt => opt.MapFrom(p => p.Categories.Count))
+                .ForMember(pr => pr.Type, opt => opt.MapFrom(p => $"({p.Type.Code}) {p.Type.Description}"))
+                .ForMember(pr => pr.Unit, opt => opt.MapFrom(p => $"({p.Unit.Code}) {p.Unit.Description}"));
+
             //API to domain
             CreateMap<FilterResource, Filter>();
             CreateMap<TypeResource, Type>()

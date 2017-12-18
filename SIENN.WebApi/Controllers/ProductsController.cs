@@ -49,12 +49,12 @@
         [HttpGet("{id}")]
         public IActionResult GetProduct(int id)
         {
-            var product = productRepository.Get(id);
+            var product = productRepository.Get(id, LoadLevel.Full);
             if (product == null)
             {
                 return NotFound();
             }
-            var productResource = mapper.Map<Product, ProductResource>(product);
+            var productResource = mapper.Map<Product, SiennProductResource>(product);
             return Ok(productResource);
         }
 
@@ -135,7 +135,7 @@
         [HttpDelete("{id}")]
         public IActionResult DeleteProduct(int id)
         {
-            var product = productRepository.Get(id, includeRelated:false);
+            var product = productRepository.Get(id, LoadLevel.Basic);
             if (product == null)
             {
                 return NotFound();

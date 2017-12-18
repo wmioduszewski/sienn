@@ -17,16 +17,25 @@ namespace SIENN.DbAccess.Repositories
 
         public override Product Get(int id)
         {
-            return Get(id, true);
+            return Get(id, LoadLevel.Categories);
         }
 
-        public Product Get(int id, bool includeRelated)
+        public Product Get(int id, LoadLevel loadLevel)
         {
             //avoid eager loading of related objects when not needed
-            if (!includeRelated)
-                return Context.Products.Find(id);
-
-            return Context.Products.Include(p => p.Categories).SingleOrDefault(p => p.Id == id);
+            switch (loadLevel)
+            {
+                case LoadLevel.Categories: return Context.Products
+                    .Include(p => p.Categories)
+                    .SingleOrDefault(p => p.Id == id);
+                case LoadLevel.Full: return Context.Products
+                    .Include(p => p.Categories)
+                    .Include(p => p.Type)
+                    .Include(p => p.Unit)
+                    .SingleOrDefault(p => p.Id == id);
+                //Basic
+                default: return Context.Products.Find(id);
+            }
         }
 
         public override IEnumerable<Product> GetAll()

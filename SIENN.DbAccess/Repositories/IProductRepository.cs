@@ -9,6 +9,16 @@ namespace SIENN.DbAccess.Repositories
     {
         IEnumerable<Product> GetAvailableProducts(ProductQuery productQuery);
         IEnumerable<Product> GetAll(Filter filter);
-        Product Get(int id, bool includeRelated = true);
+        Product Get(int id, LoadLevel loadLevel);
+    }
+
+    public enum LoadLevel
+    {
+        //Only Product object
+        Basic,
+        //Product with categories
+        Categories,
+        //Each nested property
+        Full
     }
 }
