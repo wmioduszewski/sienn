@@ -5,6 +5,7 @@
     using AutoMapper;
     using DbAccess;
     using DbAccess.Repositories;
+    using DbAccess.UnitOfWork;
     using Microsoft.AspNetCore.Mvc;
     using Services.Model;
     using Services.Resources;

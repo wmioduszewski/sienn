@@ -1,4 +1,4 @@
-﻿namespace SIENN.DbAccess
+﻿namespace SIENN.DbAccess.UnitOfWork
 {
     using Persistance;
 

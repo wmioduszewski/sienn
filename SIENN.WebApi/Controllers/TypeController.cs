@@ -7,6 +7,7 @@
     using DbAccess;
     using DbAccess.Persistance;
     using DbAccess.Repositories;
+    using DbAccess.UnitOfWork;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Services.Model;

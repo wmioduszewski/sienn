@@ -1,7 +1,5 @@
-﻿namespace SIENN.DbAccess
+﻿namespace SIENN.DbAccess.UnitOfWork
 {
-    using System.ComponentModel;
-
     public interface IUnitOfWork
     {
         void Complete();
