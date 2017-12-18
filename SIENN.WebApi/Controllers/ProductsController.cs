@@ -62,28 +62,7 @@
         [HttpPost]
         public IActionResult CreateProduct([FromBody] ProductResource productResource)
         {
-            var type = typeRepository.Get(productResource.TypeId);
-            if (type == null)
-            {
-                ModelState.AddModelError("TypeId",
-                    $"You're trying to assign product to not existing type [{productResource.TypeId}]");
-            }
-
-            var unit = unitRepository.Get(productResource.UnitId);
-            if (unit == null)
-            {
-                ModelState.AddModelError("UnitId",
-                    $"You're trying to assign product to not existing unit [{productResource.UnitId}]");
-            }
-
-            foreach (var categoryId in productResource.Categories)
-            {
-                if (categoryRepository.Get(categoryId) == null)
-                {
-                    ModelState.AddModelError("CategoryId",
-                        $"You're trying to assign product to not existing category [{categoryId}]");
-                }
-            }
+            ValidateProductInput(productResource);
 
             if (!ModelState.IsValid)
             {
@@ -103,25 +82,7 @@
         [HttpPut("{id}")]
         public IActionResult UpdateProduct(int id, [FromBody] ProductResource productResource)
         {
-            var type = typeRepository.Get(productResource.TypeId);
-            if (type == null)
-            {
-                ModelState.AddModelError("TypeId", "You're trying to assign product to not existing type");
-            }
-
-            var unit = unitRepository.Get(productResource.UnitId);
-            if (unit == null)
-            {
-                ModelState.AddModelError("UnitId", "You're trying to assign product to not existing unit");
-            }
-
-            foreach (var categoryId in productResource.Categories)
-            {
-                if (categoryRepository.Get(categoryId) == null)
-                {
-                    ModelState.AddModelError("CategoryId", "You're trying to assign product to not existing category");
-                }
-            }
+            ValidateProductInput(productResource);
 
             if (!ModelState.IsValid)
             {
@@ -149,6 +110,32 @@
             unitOfWork.Complete();
 
             return Ok(id);
+        }
+
+        private void ValidateProductInput(ProductResource productResource)
+        {
+            var type = typeRepository.Get(productResource.TypeId);
+            if (type == null)
+            {
+                ModelState.AddModelError("TypeId",
+                    $"You're trying to assign product to not existing type [{productResource.TypeId}]");
+            }
+
+            var unit = unitRepository.Get(productResource.UnitId);
+            if (unit == null)
+            {
+                ModelState.AddModelError("UnitId",
+                    $"You're trying to assign product to not existing unit [{productResource.UnitId}]");
+            }
+
+            foreach (var categoryId in productResource.Categories)
+            {
+                if (categoryRepository.Get(categoryId) == null)
+                {
+                    ModelState.AddModelError("CategoryId",
+                        $"You're trying to assign product to not existing category [{categoryId}]");
+                }
+            }
         }
     }
 }
