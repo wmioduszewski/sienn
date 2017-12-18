@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using AutoMapper;
-    using DbAccess;
     using DbAccess.Repositories;
     using DbAccess.UnitOfWork;
     using Microsoft.AspNetCore.Mvc;
@@ -39,6 +38,7 @@
             {
                 return NotFound();
             }
+
             var unitResource = mapper.Map<Unit, UnitResource>(unit);
             return Ok(unitResource);
         }

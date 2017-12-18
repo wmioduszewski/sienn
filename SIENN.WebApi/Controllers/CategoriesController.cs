@@ -3,8 +3,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using AutoMapper;
-    using DbAccess;
-    using DbAccess.Persistance;
     using DbAccess.Repositories;
     using DbAccess.UnitOfWork;
     using Microsoft.AspNetCore.Mvc;
@@ -40,6 +38,7 @@
             {
                 return NotFound();
             }
+
             var categoryResource = mapper.Map<Category, CategoryResource>(category);
             return Ok(categoryResource);
         }
@@ -51,6 +50,7 @@
             {
                 return BadRequest(ModelState);
             }
+
             var category = mapper.Map<CategoryResource, Category>(categoryResource);
 
             categoryRepository.Add(category);

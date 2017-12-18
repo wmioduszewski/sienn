@@ -1,15 +1,11 @@
 ﻿namespace SIENN.WebApi.Controllers
 {
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using AutoMapper;
-    using DbAccess;
-    using DbAccess.Persistance;
     using DbAccess.Repositories;
     using DbAccess.UnitOfWork;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
     using Services.Model;
     using Services.Resources;
 
@@ -42,6 +38,7 @@
             {
                 return NotFound();
             }
+
             var typeResource = mapper.Map<Type, TypeResource>(type);
             return Ok(typeResource);
         }

@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace SIENN.WebApi.Controllers
+﻿namespace SIENN.WebApi.Controllers
 {
+    using Microsoft.AspNetCore.Mvc;
+
     [Route("api/[controller]")]
     public class SiennController : Controller
     {

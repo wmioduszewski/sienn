@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using AutoMapper;
-    using DbAccess;
     using DbAccess.Repositories;
     using DbAccess.UnitOfWork;
     using Microsoft.AspNetCore.Mvc;
@@ -20,7 +19,7 @@
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
 
-        public ProductsController(IProductRepository productRepository, IGenericRepository<Type> typeRepository, 
+        public ProductsController(IProductRepository productRepository, IGenericRepository<Type> typeRepository,
             IGenericRepository<Unit> unitRepository, IGenericRepository<Category> categoryRepository,
             IUnitOfWork unitOfWork, IMapper mapper)
         {
@@ -55,6 +54,7 @@
             {
                 return NotFound();
             }
+
             var productResource = mapper.Map<Product, SiennProductResource>(product);
             return Ok(productResource);
         }
@@ -65,20 +65,23 @@
             var type = typeRepository.Get(productResource.TypeId);
             if (type == null)
             {
-                ModelState.AddModelError("TypeId", $"You're trying to assign product to not existing type [{productResource.TypeId}]");
+                ModelState.AddModelError("TypeId",
+                    $"You're trying to assign product to not existing type [{productResource.TypeId}]");
             }
 
             var unit = unitRepository.Get(productResource.UnitId);
             if (unit == null)
             {
-                ModelState.AddModelError("UnitId", $"You're trying to assign product to not existing unit [{productResource.UnitId}]");
+                ModelState.AddModelError("UnitId",
+                    $"You're trying to assign product to not existing unit [{productResource.UnitId}]");
             }
 
             foreach (var categoryId in productResource.Categories)
             {
                 if (categoryRepository.Get(categoryId) == null)
                 {
-                    ModelState.AddModelError("CategoryId", $"You're trying to assign product to not existing category [{categoryId}]");
+                    ModelState.AddModelError("CategoryId",
+                        $"You're trying to assign product to not existing category [{categoryId}]");
                 }
             }
 
